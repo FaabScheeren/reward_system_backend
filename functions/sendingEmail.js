@@ -4,7 +4,14 @@ const mailchimp = require("@mailchimp/mailchimp_transactional")(
   process.env.API_TOKEN
 );
 
-const sendEmail = async (email, firstname, lastname, discount_code) => {
+const sendEmail = async (
+  email,
+  firstname,
+  lastname,
+  discount_code,
+  inviter_firstname,
+  inviter_lastname
+) => {
   const response = await mailchimp.messages.sendTemplate({
     template_name: "Transactional email - reward action",
     template_content: [
@@ -62,6 +69,14 @@ const sendEmail = async (email, firstname, lastname, discount_code) => {
         {
           name: "discount_code",
           content: discount_code,
+        },
+        {
+          name: "inviter_firstname",
+          content: inviter_firstname,
+        },
+        {
+          name: "inviter_lastname",
+          content: inviter_lastname,
         },
       ],
       // "global_merge_vars": [
