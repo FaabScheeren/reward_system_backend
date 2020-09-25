@@ -31,15 +31,18 @@ inviteeSchema.pre("save", function (next) {
 });
 
 inviteeSchema.pre("save", function (next) {
-  const self = this;
-  sendEmail(self.email, self.firstName, self.lastName, self.discountCode.code);
-  // sendEmail(
-  //   invitee.email,
-  //   invitee.firstname,
-  //   invitee.lastname,
-  //   invitee.discountCode.code
-  // );
-  return next();
+  this.populate("inviter").execPopulate(function (err, poppedInvitee) {
+    // console.log("invitee", popInviter);
+    sendEmail(
+      poppedInvitee.email,
+      poppedInvitee.firstName,
+      poppedInvitee.lastName,
+      poppedInvitee.discountCode.code,
+      poppedInvitee.inviter.firstName,
+      poppedInvitee.inviter.lastName
+    );
+    return next();
+  });
 });
 
 const Invitee = mongoose.model("Invitee", inviteeSchema);
