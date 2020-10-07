@@ -31,10 +31,7 @@ var inviterSchema = new Schema({
     city: String,
   },
   discountCode: {
-    code: {
-      type: String,
-      // unique: true,
-    },
+    code: String,
     used: {
       type: Boolean,
       default: false,

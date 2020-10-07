@@ -17,12 +17,15 @@ router.post("/", async (req, res) => {
   delete inviterData.invitees;
 
   const inviter = await Inviter.create(inviterData, (err, inviterPerson) => {
+    console.log("Error", err);
+    console.log("Fault", inviterPerson);
     if (err) {
-      // if (err || err.code === 11000) {
-      // return handleError(err)
-      console.log("Error in inviter", err);
-      // console.log("Error in inviter", err);
-      return res.status(409).send("Inviter already exists");
+      if (err.code === 11000) {
+        console.log("Error in inviter", err);
+        return res.status(409).send("Inviter already exists");
+      } else {
+        return res.status().send("Something went wrong with the inviter");
+      }
     }
 
     invitees.forEach((invitee) => {
@@ -31,10 +34,13 @@ router.post("/", async (req, res) => {
 
     const invitee = Invitee.create(invitees, (err, createdInvitee) => {
       if (err) {
-        // return handleError(err)
-        console.log("Error in invitee", err);
-        // res.status()
-        return res.send("Something went wrong");
+        console.log("error code", err.code);
+        if (err.code === 11000) {
+          console.log("Error in invitee", err);
+          return res.status(409).send("Inviter already exists");
+        } else {
+          return res.status().send("Something went wrong with the invitee");
+        }
       }
 
       createdInvitee.map((invitee) => {

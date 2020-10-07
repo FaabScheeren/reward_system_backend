@@ -5,10 +5,24 @@ const couponCode = require("../functions/uniqueCoupon");
 const sendEmail = require("../functions/sendingEmail");
 
 var inviteeSchema = new Schema({
-  firstName: String,
-  lastName: String,
-  email: String,
-  phone: String,
+  firstName: {
+    type: String,
+    required: true,
+  },
+  lastName: {
+    type: String,
+    required: true,
+  },
+  email: {
+    type: String,
+    required: true,
+    unique: true,
+  },
+  phone: {
+    type: String,
+    required: true,
+    unique: true,
+  },
   adress: {
     street: String,
     houseNumber: String,
@@ -17,7 +31,10 @@ var inviteeSchema = new Schema({
   },
   discountCode: {
     code: String,
-    used: Boolean,
+    used: {
+      type: Boolean,
+      default: false,
+    },
   },
   inviter: { type: Schema.Types.ObjectId, ref: "Inviter" },
 });
